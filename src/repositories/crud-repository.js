@@ -1,5 +1,4 @@
-const { where } = require("sequelize");
-
+const {AppError} = require("../utils")
 class CrudRepository {
     constructor(model){
        this.model = model;
@@ -19,7 +18,7 @@ class CrudRepository {
 async get(id){
     const response = await this.model.findByPk(id);
       if(!response){
-        throw new Error('Not Found');
+       throw new AppError(["not able to found resource."] , 404)
       }
       return response;
     }
