@@ -85,8 +85,17 @@ const makePayment = async (req , res) => {
   }
 }
 
+ const cancelBookings = async() => {
+  try {
+      await BookingService.cancelBookings();
+  } catch (error) {
+     console.log("CANCEL BOOKING CRON JOB FAILED: ", error.message);
+  }
+ }
+
 
 module.exports = {
     createBooking,
-    makePayment
+    makePayment,
+    cancelBookings
 }

@@ -1,4 +1,4 @@
-const { BOOKING_STATUS, SuccessResponse, ErrorResponse  , IdempotencyManager} = require("./common");
+const { BOOKING_STATUS, SuccessResponse, ErrorResponse  ,CRON ,IdempotencyManager} = require("./common");
 const AppError = require("./error/server-error");
 
 module.exports ={
@@ -6,6 +6,7 @@ module.exports ={
     AppError,
     SuccessResponse,
     ErrorResponse,
-    IdempotencyManager
+    IdempotencyManager,
+    CRON
     
 }

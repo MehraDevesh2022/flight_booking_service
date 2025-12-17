@@ -4,6 +4,7 @@ const { StatusCodes } = require("http-status-codes");
 const axios = require("axios");
 const https = require("https");
 const db = require("../models");
+
 const bookingRepository = new BookingRepository();
 const { FLIGHT_SERVICE_URL } = require("../config");
 const idempotencyManager = new IdempotencyManager();
@@ -268,9 +269,23 @@ const makePayment = async (data, idempotentKey) => {
 }
 
 
+const cancelBookings =  async() => {
+  
+  try {
+      const bookingWindow  = new Date(Date.now()  + 1000 + 15); // (15 min window)
+     await bookingRepository.cancelBookingStatus(bookingWindow)
+
+
+  } catch (error) {
+    throw new AppError([error.message || "Oops somthing went went wrong"] || StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+
 module.exports = {
   createBooking,
-  makePayment
+  makePayment,
+  cancelBookings
 }
 
 
@@ -281,5 +296,5 @@ module.exports = {
 
 
 
-
+// created at 
 
