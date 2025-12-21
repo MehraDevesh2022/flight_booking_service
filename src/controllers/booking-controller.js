@@ -9,8 +9,6 @@ const createBooking = async(req , res) => {
 
   try {
 
-
-    console.log("req.body", req.body);
     const idempotencyKey  = req.headers['idempotency-key'];
     const booking = await BookingService.createBooking(
       {

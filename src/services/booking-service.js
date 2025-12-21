@@ -21,7 +21,7 @@ const httpAgent = new https.Agent({
 
 const axiosInstance = axios.create({
   baseURL: FLIGHT_SERVICE_URL,
-  httpsAgent: httpAgent,
+  httpAgent: httpAgent,
   httpsAgent: httpAgent,
   timeout: 5000,
   headers: {

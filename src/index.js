@@ -10,11 +10,6 @@ app.use(express.urlencoded({extended : true}))
 
 app.use("/api", apiRoutes)
 
-app.get("/info" , async (req , res) => {
-    console.log("req" , req)
-    return res.status(200).json({ok : "ok"})
-})
-
 
 
 app.listen(PORT, () => {
