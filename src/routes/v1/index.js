@@ -5,7 +5,6 @@ const bookingRoutes =  require("./booking-router")
 
 router.use("/booking", bookingRoutes);
 
-
 module.exports = router
 
 

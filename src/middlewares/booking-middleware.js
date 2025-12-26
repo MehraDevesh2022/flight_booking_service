@@ -4,9 +4,9 @@ const {StatusCodes} = require("http-status-codes");
 
 const validateCreateBooking  = (req , res, next) =>{
 
-    const idempotnecyKey  = req.headers['idempotency-key'];
+    const idempotencyKey  = req.headers['idempotency-key'];
     const errorMessage  = "Something went wrong while creating booking"
-    if(!idempotnecyKey){ 
+    if(!idempotencyKey){ 
         ErrorResponse.message = errorMessage;
         ErrorResponse.error = new AppError(["Idempotency key is required"], StatusCodes.BAD_REQUEST);
         return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse});
@@ -31,16 +31,16 @@ const validateCreateBooking  = (req , res, next) =>{
     next();
 }
 
-function paymentMiddleware(req, res, next) {
+const paymentMiddleware  =(req, res, next) => {
     const idempotencyKey = req.headers['idempotency-key'];
     const errorMessage = "Something went wrong while making payment please try again later."
     if (!idempotencyKey) {
-        ErrorResponse.messgae = errorMessage;
+        ErrorResponse.message = errorMessage;
         ErrorResponse.error = new AppError(["Idempotency key is required."], StatusCodes.BAD_REQUEST);
         return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
     }
     if (!req.body.bookingId) {
-        ErrorResponse.message = errorMessage;;
+        ErrorResponse.message = errorMessage;
         ErrorResponse.error = new AppError(["Booking id is required to make payment."], StatusCodes.BAD_REQUEST);
         return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
     }
