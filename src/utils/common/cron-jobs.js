@@ -1,6 +1,6 @@
 const cron  = require("node-cron");
 
-function cronSchedulder(){
+function cronScheduler(){
     const {BookingController} = require("../../controllers/index"); // IMPORT INSIDE to prevent circular import issue
     cron.schedule("*/15 * * * * *" , async () => {
        try {
@@ -8,12 +8,12 @@ function cronSchedulder(){
          console.log("CRON SUCCESSFULLY RUNT AT :" , new Date());
          
        } catch (error) {
-        console.error("SOMTHIN WENT WRONG WITH cancelBookings CRON :" , error);
+        console.error("SOMETHING WENT WRONG WITH cancelBookings CRON :" , error);
         
        }
     })
 }
 
 module.exports = {
-  cronSchedulder
+  cronScheduler
 }
