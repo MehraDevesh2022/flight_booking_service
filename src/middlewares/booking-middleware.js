@@ -1,58 +1,58 @@
-const {AppError, ErrorResponse} = require("../utils");
-const {StatusCodes} = require("http-status-codes");
+const { AppError, ErrorResponse } = require("../utils");
+const { StatusCodes } = require("http-status-codes");
 
 
-const validateCreateBooking  = (req , res, next) =>{
 
-    const idempotencyKey  = req.headers['idempotency-key'];
-    const errorMessage  = "Something went wrong while creating booking"
-    if(!idempotencyKey){ 
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["Idempotency key is required"], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse});
-    }else if(!req.body.flightId){
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["Flight ID is required"], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse});
-    }else if(!req.body.userId){
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["User ID is required"], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse}); 
-    }else if(!req.body.noOfSeats){
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["No of seats is required"], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse});
-    }else if(req.body.noOfSeats <= 0){
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["No of seats must be greater than 0"], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({...ErrorResponse});
+const sendErrorValidation = (res, message, detail) => {
+    ErrorResponse.message = message;
+    ErrorResponse.error = new AppError([detail], StatusCodes.BAD_REQUEST);
+    return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
+}
+
+const validateCreateBooking = (req, res, next) => {
+
+    const idempotencyKey = req.headers['idempotency-key'];
+    const errorMessage = "Something went wrong while creating booking"
+
+    const bookingValidations = {
+        condition: !idempotencyKey, detail: "Idempotency key is required",
+        condition: !req.body.flightId, detail: "Flight ID is required",
+        condition: !req.body.userId, detail: "User ID is required",
+        condition: !req.body.noOfSeats, detail: "No of seats is required",
+        condition: !req.body.noOfSeats <= 0, detail: "No of seats must be greater than 0"
     }
-    
+
+
+    for (const { condition, detail } of bookingValidations) {
+        if (condition) {
+            sendErrorValidation(res, errorMessage, detail);
+        }
+
+    }
     next();
 }
 
-const paymentMiddleware  =(req, res, next) => {
+const paymentMiddleware = (req, res, next) => {
     const idempotencyKey = req.headers['idempotency-key'];
     const errorMessage = "Something went wrong while making payment please try again later."
-    if (!idempotencyKey) {
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["Idempotency key is required."], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
+
+    const paymentValidations = {
+        condition: !idempotencyKey, detail: "Idempotency key is required to make payment.",
+        condition: !req.body.bookingId, detail: "Booking id is required to make payment.",
+        condition: !req.body.totalPrice || Number(req.body.totalPrice) <= 0, detail: req.body.totalPrice <= 0 ? "Price must be greater than zero." : "Price is required to make payment."
     }
-    if (!req.body.bookingId) {
-        ErrorResponse.message = errorMessage;
-        ErrorResponse.error = new AppError(["Booking id is required to make payment."], StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
+
+    for (const { condition, detail } of paymentValidations) {
+        if (condition) {
+            sendErrorValidation(res, errorMessage, detail);
+        }
     }
-    if (!req.body.totalPrice || Number(req.body.totalPrice) <= 0) {
-        ErrorResponse.message = errorMessage;
-        const message  = req.body.totalPrice <= 0 ? "Price must be greater than zero." : "Price is required to make payment."
-        ErrorResponse.error = new AppError(message, StatusCodes.BAD_REQUEST);
-        return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse });
-    }
+
     next();
 
 }
 
 
-module.exports = {validateCreateBooking , paymentMiddleware}
+module.exports = { validateCreateBooking, paymentMiddleware }
+
+
