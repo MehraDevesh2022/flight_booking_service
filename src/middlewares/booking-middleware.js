@@ -14,13 +14,13 @@ const validateCreateBooking = (req, res, next) => {
     const idempotencyKey = req.headers['idempotency-key'];
     const errorMessage = "Something went wrong while creating booking"
 
-    const bookingValidations = {
-        condition: !idempotencyKey, detail: "Idempotency key is required",
-        condition: !req.body.flightId, detail: "Flight ID is required",
-        condition: !req.body.userId, detail: "User ID is required",
-        condition: !req.body.noOfSeats, detail: "No of seats is required",
-        condition: !req.body.noOfSeats <= 0, detail: "No of seats must be greater than 0"
-    }
+    const bookingValidations = [
+        {condition: !idempotencyKey, detail: "Idempotency key is required"},
+        {condition: !req.body.flightId, detail: "Flight ID is required"},
+        {condition: !req.body.userId, detail: "User ID is required"},
+        {condition: !req.body.noOfSeats, detail: "No of seats is required"},
+        {condition: req.body.noOfSeats <= 0, detail: "No of seats must be greater than 0"}
+    ]
 
 
     for (const { condition, detail } of bookingValidations) {
@@ -54,5 +54,8 @@ const paymentMiddleware = (req, res, next) => {
 
 
 module.exports = { validateCreateBooking, paymentMiddleware }
+
+
+
 
 
