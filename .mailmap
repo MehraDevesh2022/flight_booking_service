@@ -1,0 +1,8 @@
+# This file maps commit authors with incorrect email addresses to their correct identities
+# Format: Correct Name <correct@email> Incorrect Name <incorrect@email>
+# 
+# This helps Git (and GitHub) properly attribute commits to the right person
+# even when the email address in historical commits has typos or variations.
+
+# Map the typo email (gmial.com) to the correct email (gmail.com)
+MehraDevesh2022 <mehra.devesh2022@gmail.com> MehraDevesh2022 <mehra.devesh2022@gmial.com>
