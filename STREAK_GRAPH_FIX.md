@@ -11,7 +11,18 @@ GitHub only counts commits toward your contribution graph when the email address
 ## Solution Applied
 
 ### 1. Added `.mailmap` File
-A `.mailmap` file has been added to this repository that maps the incorrect email to the correct one. This helps Git properly attribute historical commits.
+A `.mailmap` file has been added to this repository that maps the incorrect email to the correct one. 
+
+**What `.mailmap` does:**
+- ✅ Makes Git commands (like `git log`, `git shortlog`) display the correct email
+- ✅ Helps with local attribution and analytics
+
+**What `.mailmap` does NOT do:**
+- ❌ Does NOT change GitHub's contribution graph
+- ❌ Does NOT modify the actual commits in Git history
+- ❌ Does NOT fix old PRs in the contribution streak
+
+Think of `.mailmap` as a "display name" mapper for Git - it changes what you see, not what's actually stored.
 
 ### 2. Created CONTRIBUTING.md
 A comprehensive guide (`CONTRIBUTING.md`) has been added that explains:
@@ -59,6 +70,41 @@ After fixing your git config and verifying your email on GitHub:
 - ✅ New commits will appear in your contribution graph
 - ✅ Green squares will show on your profile
 - ✅ Your contribution streak will update properly
+
+## Frequently Asked Questions
+
+### Q: Will fixing my email configuration fix old PRs and commits?
+
+**Short Answer:** No, not automatically. Here's what each solution does:
+
+1. **`.mailmap` file** (already added):
+   - ✅ Fixes how Git displays attribution locally (e.g., in `git log`, `git shortlog`)
+   - ❌ Does NOT change GitHub's contribution graph for old commits
+   - Use case: Makes local git history cleaner
+
+2. **Fixing `git config`** (you need to do this):
+   - ✅ Ensures all FUTURE commits use the correct email
+   - ❌ Does NOT affect commits that already exist
+   - Use case: Prevents the problem from happening again
+
+3. **To fix old PRs/commits** (optional, advanced):
+   - You need to rewrite git history using `git rebase` or `git filter-branch`
+   - This changes the commit hash and requires force-pushing
+   - ⚠️ **WARNING**: This can break things if others have already pulled your commits
+   - See "For Historical Commits (Optional)" section below for details
+
+**Recommendation:** 
+- Fix your git config now (required)
+- Verify your email on GitHub (required)
+- Don't worry about old commits unless they're really important
+- Focus on making new commits with the correct email - those will count!
+
+### Q: Why don't my merged PRs show in my contribution graph?
+
+Even if a PR is merged, commits only count if:
+- The email in the commit matches a verified email on your GitHub account
+- The commit is in the default branch (usually `main` or `master`)
+- The repository is not a fork, OR you're contributing to someone else's repo
 
 ## Quick Checklist
 
